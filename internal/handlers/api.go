@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/gabriel-q7/go-rest-api/internal/middleware"
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 )
@@ -11,8 +12,8 @@ func Handler(r *chi.Mux) {
 
 	r.Route("/account", func(router chi.Router) {
 
-		router.Use(middleware.authorization)
+		router.Use(middleware.Authorization)
 
-		router.Get("/coins", getCoinBalance)
+		router.Get("/coins", GetCoinBalance)
 	})
 }

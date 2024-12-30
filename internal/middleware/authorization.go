@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gabriel-q7/go-rest-api/api"
+	"github.com/gabriel-q7/go-rest-api/internal/tools"
 	log "github.com/sirupsen/logrus"
 )
 
-var UnauthorizedError = errors.New("Invalida username or token.")
+var UnauthorizedError = errors.New("Invalid username or token.")
 
 func Authorization(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +31,16 @@ func Authorization(next http.Handler) http.Handler {
 			return
 		}
 
-		var loginDetails = (*database).GetUserLoginDetails(username)
+		var loginDetails *tools.LoginDetails
+		loginDetails = (*database).GetUserLoginDetails(username)
+
+		if loginDetails == nil || (token != (*loginDetails).AuthToken) {
+			log.Error(UnauthorizedError)
+			api.RequestErrorHandler(w, UnauthorizedError)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+
 	})
 }
