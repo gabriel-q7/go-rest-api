@@ -15,7 +15,6 @@ go.work
 go-build/
 
 # IDE/editor specific files
-.vscode/
 .idea/
 *.swp
 
